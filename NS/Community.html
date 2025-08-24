@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navi Soch - Community</title>
+    <!-- Use Tailwind CSS for a modern, responsive design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            display: flex;
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f3e8;
+            font-family: 'Noto Sans Devanagari', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--deep-brown);
+            background: url(./bg.jpg);
+            min-height: 100vh;
+            font-size: 16px;
+            background-repeat: no-repeat;
+            align-items: center;
+            background-attachment: fixed;
+
+        }
+        .card-bg {
+            background-color: #ffffff; /* White background for cards */
+        }
+        .equal-height-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .equal-height-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .equal-height-grid > div {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body class="text-stone-800 min-h-screen flex flex-col items-center p-4">
+
+    <!-- Main Content Container -->
+    <main class="w-full max-w-4xl p-8 rounded-2xl shadow-lg mt-8 bg-white space-y-12">
+        
+        <h1 class="text-4xl font-extrabold text-stone-950 text-center">Community and Knowledge Exchange</h1>
+        <p class="text-lg text-stone-700 text-center">Connect, share, and learn with your fellow farmers and experts.</p>
+
+        <!-- Main Feature Cards Section -->
+        <div class="equal-height-grid">
+
+            <!-- Ask a Question Card -->
+            <div class="card-bg p-6 rounded-xl shadow-md border border-stone-200 space-y-4">
+                <h2 class="text-2xl font-bold text-amber-900 flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>Ask a Question</span>
+                </h2>
+                <p class="text-sm text-stone-600">Get help from fellow farmers and experts.</p>
+                <form id="forum-question-form" class="space-y-4 flex-grow flex flex-col justify-end">
+                    <div>
+                        <textarea id="forum-question" rows="4" placeholder="Type your farming question here..." required class="block w-full rounded-md border-stone-300 bg-stone-100 text-stone-950 shadow-sm focus:border-amber-900 focus:ring-amber-900 sm:text-sm p-3"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-2 bg-amber-900 rounded-md text-white font-medium hover:bg-amber-800 transition-colors">
+                        Post Question
+                    </button>
+                </form>
+                <div id="forum-response" class="mt-4 p-4 rounded-md bg-amber-100 hidden">
+                    <h3 class="font-bold text-lg text-stone-800">Expert Response:</h3>
+                    <p id="response-text" class="text-stone-600 mt-2"></p>
+                </div>
+            </div>
+
+            <!-- Upload Disease Photo Card -->
+            <div class="card-bg p-6 rounded-xl shadow-md border border-stone-200 space-y-4">
+                <h2 class="text-2xl font-bold text-amber-900 flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>Upload Disease Photo</span>
+                </h2>
+                <p class="text-sm text-stone-600">Upload plant photos for disease identification.</p>
+                <div class="h-40 flex items-center justify-center border-2 border-dashed border-stone-400 rounded-md flex-grow">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                </div>
+                <input type="file" id="crop-photo-input" accept="image/*" class="block w-full text-sm text-stone-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-900 file:text-white hover:file:bg-amber-800">
+                <button id="analyze-photo-btn" class="w-full py-2 bg-amber-900 rounded-md text-white font-medium hover:bg-amber-800 transition-colors">
+                    Analyze Photo
+                </button>
+                <div id="photo-analysis-result" class="mt-4 p-4 rounded-md bg-amber-100 hidden">
+                    <h3 class="font-bold text-lg text-stone-800">Analysis Result:</h3>
+                    <p id="analysis-text" class="text-stone-600 mt-2"></p>
+                </div>
+                <div id="photo-loading-indicator" class="hidden text-center text-amber-900 font-medium">
+                    Analyzing photo...
+                </div>
+            </div>
+            
+            <!-- Weather & Alerts Card -->
+            <div class="card-bg p-6 rounded-xl shadow-md border border-stone-200 space-y-4">
+                <h2 class="text-2xl font-bold text-amber-900 flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 16.27A6 6 0 1 0 12 2v2a4 4 0 1 1 4 4.27"></path>
+                        <path d="M12 12V6a6 6 0 0 0-4 10.27"></path>
+                        <path d="M18.82 17.5A6 6 0 0 0 12 22"></path>
+                        <path d="M4 17.5a6 6 0 0 0 7-10.27"></path>
+                    </svg>
+                    <span>Weather & Alerts</span>
+                </h2>
+                <p class="text-sm text-stone-600">Get weather updates and satellite-based farming alerts.</p>
+                <form id="weather-form" class="space-y-4 flex-grow flex flex-col justify-end">
+                    <div>
+                        <input type="text" id="weather-location" name="location" required placeholder="Enter location (e.g., New Delhi)" class="block w-full rounded-md border-stone-300 bg-stone-100 text-stone-950 shadow-sm focus:border-amber-900 focus:ring-amber-900 sm:text-sm p-3">
+                    </div>
+                    <button type="submit" class="w-full py-2 bg-amber-900 rounded-md text-white font-medium hover:bg-amber-800 transition-colors">
+                        Check Weather & Get Advice
+                    </button>
+                </form>
+                <div id="weather-results" class="space-y-4 hidden">
+                    <div id="weather-loading-indicator" class="hidden text-center text-amber-900 font-medium">
+                        Fetching weather and generating advice...
+                    </div>
+                    <div id="weather-output" class="p-4 rounded-md bg-amber-100 text-stone-800">
+                        <!-- Weather and advice will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agriculture and Market Alerts Section -->
+        <div class="bg-white p-6 rounded-lg shadow-md border border-stone-300 space-y-4">
+            <h3 class="text-xl font-bold text-stone-800">Agriculture & Market Alerts</h3>
+            <div id="newspaper-alerts" class="space-y-4 text-stone-600">
+                <!-- Alerts will be injected here -->
+            </div>
+        </div>
+
+        <!-- Recent Posts Forum Section -->
+        <div id="recent-posts-section" class="space-y-4">
+            <h2 class="text-2xl font-bold text-amber-900">Recent Community Posts</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md border border-stone-300">
+                <div id="recent-posts-container" class="space-y-6">
+                    <!-- Posts will be injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Gallery Section -->
+        <div id="video-section" class="space-y-4">
+            <h2 class="text-2xl font-bold text-amber-900">Videos of Successful Farmers</h2>
+            <div id="video-gallery" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Video cards will be injected here -->
+            </div>
+        </div>
+
+        <!-- Expert Q&A Sessions Section -->
+        <div id="sessions-section" class="space-y-4">
+            <h2 class="text-2xl font-bold text-amber-900">Weekly Expert Q&A Sessions</h2>
+            <div id="sessions-container" class="space-y-4">
+                <!-- Session cards will be injected here -->
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- API Keys (Leave empty, handled by platform) ---
+        const apiKey = "AIzaSyALDt7YZ5MCHp6Fx2YLYm7fRpomEwGkk1A";
+
+        // Mock data for recent forum posts
+        const recentPosts = [
+            {
+                id: 1,
+                user: "Ramesh Singh",
+                time: "2 hours ago",
+                content: "My tomato plants are showing yellow spots. Is this a disease? Any organic treatment suggestions?",
+                likes: 12,
+                photos: 3,
+                replies: [
+                    { user: "Priya Sharma", content: "That looks like Leaf Spot disease. Try spraying a solution of baking soda and water." },
+                    { user: "Sunil Kumar", content: "Ramesh, I had the same issue. A mix of neem oil and water worked for me. Make sure to apply it in the evening." }
+                ]
+            },
+            {
+                id: 2,
+                user: "Priya Sharma",
+                time: "1 day ago",
+                content: "Is there a new government subsidy for electric tractors? My local dealer told me about it.",
+                likes: 8,
+                photos: 0,
+                replies: []
+            },
+            {
+                id: 3,
+                user: "Sunil Kumar",
+                time: "3 days ago",
+                content: "What is the current market price for high-quality Basmati rice in Delhi? Thinking of selling my harvest soon.",
+                likes: 25,
+                photos: 0,
+                replies: []
+            }
+        ];
+
+        // Function to render recent forum posts
+        const renderRecentPosts = () => {
+            const postsContainer = document.getElementById('recent-posts-container');
+            postsContainer.innerHTML = recentPosts.map(post => `
+                <div class="bg-amber-100 p-6 rounded-xl shadow-md border border-stone-300">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-amber-900 text-white font-bold">
+                            ${post.user.charAt(0)}
+                        </div>
+                        <div>
+                            <p class="font-semibold text-stone-800">${post.user}</p>
+                            <p class="text-sm text-stone-500">${post.time}</p>
+                        </div>
+                    </div>
+                    <p class="text-stone-800 mb-4">${post.content}</p>
+                    <div class="flex items-center space-x-6 text-stone-500 text-sm">
+                        <button class="like-btn flex items-center" data-post-id="${post.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                            </svg>
+                            <span class="likes-count">${post.likes}</span> likes
+                        </button>
+                        <span class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            ${post.replies.length} replies
+                        </span>
+                        <span class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            ${post.photos} photos
+                        </span>
+                    </div>
+
+                    <!-- Replies Section -->
+                    <div class="mt-4 border-t border-stone-300 pt-4 space-y-4" id="replies-container-${post.id}">
+                        ${post.replies.map(reply => `
+                            <div class="flex space-x-4">
+                                <div class="flex-shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-stone-400 text-white font-bold text-sm">
+                                    ${reply.user.charAt(0)}
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-stone-800 text-sm">${reply.user}</p>
+                                    <p class="text-stone-600 text-sm">${reply.content}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Reply Form -->
+                    <form class="reply-form mt-4" data-post-id="${post.id}">
+                        <h4 class="font-semibold text-stone-800 mb-2">Wanna give a response?</h4>
+                        <textarea name="reply-content" rows="2" placeholder="Write your response here..." required class="block w-full rounded-md border-stone-300 bg-white text-stone-950 shadow-sm focus:border-amber-900 focus:ring-amber-900 sm:text-sm p-2"></textarea>
+                        <button type="submit" class="mt-2 py-1 px-4 bg-amber-900 rounded-md text-white font-medium hover:bg-amber-800 transition-colors text-sm">
+                            Submit Response
+                        </button>
+                    </form>
+                </div>
+            `).join('');
+        };
+        
+        // --- Event Listener for Post Interactions (Likes and Replies) ---
+        document.getElementById('recent-posts-container').addEventListener('click', (event) => {
+            if (event.target.closest('.like-btn')) {
+                const button = event.target.closest('.like-btn');
+                const postId = parseInt(button.dataset.postId);
+                const post = recentPosts.find(p => p.id === postId);
+                if (post) {
+                    post.likes++;
+                    renderRecentPosts(); // Re-render to update the likes count
+                }
+            }
+        });
+
+        document.getElementById('recent-posts-container').addEventListener('submit', (event) => {
+            if (event.target.classList.contains('reply-form')) {
+                event.preventDefault();
+                const form = event.target;
+                const postId = parseInt(form.dataset.postId);
+                const replyContent = form.querySelector('textarea[name="reply-content"]').value;
+                const post = recentPosts.find(p => p.id === postId);
+
+                if (post && replyContent.trim() !== '') {
+                    // Simulating a new reply from a generic user
+                    const newReply = {
+                        user: "New User",
+                        content: replyContent
+                    };
+                    post.replies.push(newReply);
+                    form.reset(); // Clear the form
+                    renderRecentPosts(); // Re-render to show the new reply
+                }
+            }
+        });
+
+
+        // --- Weather & Agriculture Alerts Logic (Simulated with mock data) ---
+        document.getElementById('weather-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const location = document.getElementById('weather-location').value;
+            const resultsDiv = document.getElementById('weather-results');
+            const loadingIndicator = document.getElementById('weather-loading-indicator');
+            const outputDiv = document.getElementById('weather-output');
+
+            resultsDiv.classList.remove('hidden');
+            loadingIndicator.classList.remove('hidden');
+            outputDiv.innerHTML = '';
+            
+            // Mock API call to simulate weather data fetch
+            try {
+                const weatherData = await new Promise(resolve => setTimeout(() => {
+                    // Simulate different weather patterns for different locations
+                    let temp = 25;
+                    let conditions = "Partly Cloudy";
+                    let forecast = "Stable weather for the next week.";
+                    if (location.toLowerCase().includes('delhi')) {
+                        temp = 35;
+                        conditions = "Hot and Dry";
+                        forecast = "Heatwave conditions expected. Advised to irrigate crops frequently.";
+                    } else if (location.toLowerCase().includes('mumbai')) {
+                        temp = 28;
+                        conditions = "Humid with chance of rain";
+                        forecast = "Monsoon season approaching. Expect heavy rains and humidity.";
+                    } else if (location.toLowerCase().includes('kashmir')) {
+                        temp = 15;
+                        conditions = "Cool and Sunny";
+                        forecast = "Ideal growing conditions for temperate crops.";
+                    }
+                    resolve({ temp: temp, conditions: conditions, forecast: forecast });
+                }, 1500));
+
+                // Gemini API call for AI-powered advice
+                const prompt = `Based on the following weather conditions and location, provide simple, actionable advice for a farmer.
+                Location: ${location}
+                Temperature: ${weatherData.temp}°C
+                Conditions: ${weatherData.conditions}
+                Forecast: ${weatherData.forecast}
+                
+                Suggest a few suitable crops for these conditions and provide one key piece of advice on how to protect existing crops from this weather. Keep the response friendly and easy to read.`;
+                
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Gemini API call failed with status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (text) {
+                    outputDiv.innerHTML = `<h3 class="font-bold text-lg text-amber-500 mb-2">Weather & Crop Advice for ${location}</h3>
+                                               <p class="text-stone-300 mt-2">${text}</p>`;
+                } else {
+                    outputDiv.innerHTML = `<p class="text-red-400">Error: Could not get a response from the AI. Please try again.</p>`;
+                }
+
+            } catch (error) {
+                console.error('An error occurred:', error);
+                outputDiv.innerHTML = `<p class="text-red-400">An error occurred while fetching data. Please check your inputs and network connection. Error: ${error.message}</p>`;
+            } finally {
+                loadingIndicator.classList.add('hidden');
+            }
+        });
+
+
+        // --- Forum Q&A Logic (Uses Gemini API) ---
+        document.getElementById('forum-question-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const question = document.getElementById('forum-question').value;
+            const responseDiv = document.getElementById('forum-response');
+            const responseText = document.getElementById('response-text');
+            responseDiv.classList.remove('hidden');
+            responseText.innerText = 'Searching for an expert response...';
+
+            try {
+                const prompt = `Act as an expert farmer. Answer the following question in a friendly and helpful tone. Keep the answer concise and easy to understand for a farmer. Question: "${question}"`;
+                const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (text) {
+                    responseText.innerText = text;
+                } else {
+                    responseText.innerText = 'Could not find a suitable response. Please try rephrasing your question.';
+                }
+            } catch (error) {
+                console.error('API Error:', error);
+                responseText.innerText = 'There was an error connecting to the knowledge base. Please try again.';
+            }
+        });
+
+        // --- Crop Disease Photo Analysis Logic (Uses Gemini API for Image Understanding) ---
+        document.getElementById('analyze-photo-btn').addEventListener('click', async function() {
+            const input = document.getElementById('crop-photo-input');
+            const file = input.files[0];
+            const resultDiv = document.getElementById('photo-analysis-result');
+            const resultText = document.getElementById('analysis-text');
+            const loadingIndicator = document.getElementById('photo-loading-indicator');
+
+            if (!file) {
+                resultDiv.classList.remove('hidden');
+                resultDiv.classList.add('bg-red-800');
+                resultText.innerText = 'Please select a photo to analyze.';
+                return;
+            }
+
+            loadingIndicator.classList.remove('hidden');
+            resultDiv.classList.add('hidden');
+            resultDiv.classList.remove('bg-red-800');
+
+            // Convert image to Base64
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                const base64Data = reader.result.split(',')[1];
+                
+                try {
+                    const prompt = "Act as an agricultural expert. Analyze this image of a plant and identify any potential crop diseases or issues. Provide a simple diagnosis and suggest a basic remedy or next step for a farmer. Be concise and use simple language.";
+                    const payload = {
+                        contents: [{
+                            role: "user",
+                            parts: [
+                                { text: prompt },
+                                { inlineData: { mimeType: file.type, data: base64Data } }
+                            ]
+                        }]
+                    };
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+                    const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (text) {
+                        resultText.innerText = text;
+                        resultDiv.classList.remove('hidden');
+                    } else {
+                        resultDiv.classList.remove('hidden');
+                        resultDiv.classList.add('bg-red-800');
+                        resultText.innerText = 'Analysis failed. The image could not be processed.';
+                    }
+                } catch (error) {
+                    console.error('API Error:', error);
+                    resultDiv.classList.remove('hidden');
+                    resultDiv.classList.add('bg-red-800');
+                    resultText.innerText = 'There was an error during analysis. Please try again.';
+                } finally {
+                    loadingIndicator.classList.add('hidden');
+                }
+            };
+        });
+
+        // --- Video Gallery Logic (Mock data) ---
+        const videos = [
+            { title: "Story of a successful farmer", youtubeId: "3vV83y83s8I" },
+            { title: "Group Farming: A Way Forward", youtubeId: "c_fJ25iC3d8" },
+            { title: "Modern Techniques for High Yield", youtubeId: "L0qg_fQ21y4" }
+        ];
+
+        const renderVideos = () => {
+            const videoGallery = document.getElementById('video-gallery');
+            videoGallery.innerHTML = videos.map(video => `
+                <div class="bg-amber-100 rounded-lg overflow-hidden shadow-md">
+                    <iframe class="w-full aspect-video" src="https://www.youtube.com/embed/${video.youtubeId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-stone-800">${video.title}</h3>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        // --- Expert Sessions Logic (Mock data) ---
+        const sessions = [
+            { topic: "Legal Rights for Farmers", expert: "Adv. Rajesh Kumar", date: "Every Monday, 4 PM" },
+            { topic: "Financial Planning for a New Harvest", expert: "Mr. Priya Singh", date: "Every Wednesday, 6 PM" },
+            { topic: "New Agricultural Techniques", expert: "Dr. Anjali Sharma", date: "Every Friday, 5 PM" }
+        ];
+
+        const renderSessions = () => {
+            const sessionsContainer = document.getElementById('sessions-container');
+            sessionsContainer.innerHTML = sessions.map(session => `
+                <div class="bg-amber-100 p-6 rounded-lg shadow-md border border-stone-300 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                    <div>
+                        <h3 class="text-xl font-semibold text-stone-800">${session.topic}</h3>
+                        <p class="text-stone-600 mt-1">Expert: ${session.expert}</p>
+                        <p class="text-stone-500 text-sm">${session.date}</p>
+                    </div>
+                    <button class="py-2 px-4 bg-amber-900 rounded-md text-white font-medium hover:bg-amber-800 transition-colors">
+                        Join Session
+                    </button>
+                </div>
+            `).join('');
+        };
+
+        // --- Newspaper Alerts Logic ---
+        const renderNewspaperAlerts = () => {
+            const alertsContainer = document.getElementById('newspaper-alerts');
+            const alerts = [
+                {
+                    heading: "Latest Agriculture News",
+                    points: [
+                        "Government announces new subsidy for irrigation systems in drought-prone regions.",
+                        "New crop variety 'Pusa Basmati 1121' shows high resistance to common pests.",
+                        "Expert recommends using natural fertilizers to improve soil health for the next sowing season."
+                    ]
+                },
+                {
+                    heading: "Important Market Updates",
+                    points: [
+                        "Wholesale price of wheat expected to drop by 5% due to a good harvest.",
+                        "Price of organic vegetables is on the rise in urban markets. Focus on organic farming to increase profit.",
+                        "Demand for millets is increasing globally. Consider diversifying your crops to include millets."
+                    ]
+                },
+                {
+                    heading: "Pest & Disease Alerts",
+                    points: [
+                        "Warning: Keep an eye out for early signs of yellow rust in wheat crops.",
+                        "Advisory: Use a neem-based solution to prevent fungal infections in rice paddies.",
+                        "A new type of pest has been reported in the northern regions. Use insecticides judiciously."
+                    ]
+                }
+            ];
+
+            alertsContainer.innerHTML = alerts.map(section => `
+                <div>
+                    <h4 class="text-lg font-bold text-amber-900 mb-2">${section.heading}</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        ${section.points.map(point => `<li>${point}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        };
+
+        // Initial function calls to populate the page
+        renderVideos();
+        renderSessions();
+        renderNewspaperAlerts();
+        renderRecentPosts();
+    </script>
+</body>
+</html>

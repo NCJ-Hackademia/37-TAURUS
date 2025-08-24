@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Navi Soch – Schemes Eligibility / कानूनी और सरकारी योजनाएं</title>
+  <style>
+    :root{
+      --cream:#f9f5ef;
+      --brown:#8b5e34;
+      --brown-dark:#6f4526;
+      --text:#4b2e2e;
+      --chip:#f3e5d8;
+      --white:#ffffff;
+    }
+    *{box-sizing:border-box}
+    body{
+        margin:0; padding:24px;
+        font-family: system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+        background:var(--cream); color:var(--text);
+        font-family: 'Noto Sans Devanagari', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Noto Sans Devanagari', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        line-height: 1.6;
+        color: var(--deep-brown);
+        background: url(./bg.jpg);
+        min-height: 100vh;
+        font-size: 16px;
+    }
+    h1{margin:0 0 12px; color:var(--chip)}
+    .grid{
+      display:grid; gap:20px;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      align-items:start;
+    }
+    .card{
+      background:var(--white);
+      border-radius:16px;
+      box-shadow:0 6px 20px rgba(0,0,0,.08);
+      padding:20px;
+      border-top:6px solid var(--brown);
+    }
+    .card h3{margin:0 0 10px; color:var(--brown)}
+    .field{
+      display:flex; flex-direction:column; gap:8px;
+      margin-top:6px;
+    }
+    .input, .select{
+      width:100%; padding:12px 14px; border-radius:10px;
+      border:1px solid #d5c8bc; background:#fff; font-size:15px;
+      outline:none;
+    }
+    .input:focus, .select:focus{border-color:var(--brown)}
+    .submit-wrap{grid-column:1/-1; text-align:center}
+    .btn{
+      background:var(--brown); color:#fff; border:0; cursor:pointer;
+      padding:12px 22px; font-weight:600; border-radius:10px; font-size:16px;
+      box-shadow:0 8px 16px rgba(139,94,52,.2); transition:.2s;
+    }
+    .btn:hover{background:var(--brown-dark)}
+    .results{grid-column:1/-1}
+    .scheme{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      background:var(--chip); border-radius:12px; padding:14px 16px; margin:10px 0;
+      border-left:6px solid var(--brown);
+    }
+    .scheme h4{margin:0 0 4px}
+    .actions{display:flex; gap:10px; flex-wrap:wrap}
+    .link{
+      text-decoration:none; color:#fff; background:var(--brown);
+      padding:8px 12px; border-radius:8px; font-size:14px; font-weight:600;
+    }
+    .link.secondary{background:var(--brown-dark)}
+    @media (max-width: 920px){
+      .grid{grid-template-columns:1fr}
+      .submit-wrap{text-align:stretch}
+    }
+  </style>
+</head>
+<body>
+  <h1>Navi Soch – Schemes Eligibility / कानूनी और सरकारी योजनाएं</h1>
+  <p style="color: var(--chip);">Check your eligibility for schemes.</p>
+
+  <div class="grid">
+    <!-- Land -->
+    <div class="card">
+      <h3>Land Size</h3>
+      <div class="field">
+        <label for="land">Acres</label>
+        <input id="land" class="input" type="number" step="0.1" min="0" placeholder="e.g., 2.0" required/>
+      </div>
+    </div>
+
+    <!-- Income -->
+    <div class="card">
+      <h3>Annual Income</h3>
+      <div class="field">
+        <label for="income">Amount (₹)</label>
+        <input id="income" class="input" type="number" min="0" placeholder="e.g., 180000" required/>
+      </div>
+    </div>
+
+    <!-- Crop -->
+    <div class="card">
+      <h3>Crop</h3>
+      <div class="field">
+        <label for="crop">Primary Crop</label>
+        <select id="crop" class="select" required>
+          <option value="">— Select Crop —</option>
+          <option value="wheat">Wheat</option>
+          <option value="rice">Rice</option>
+          <option value="maize">Maize</option>
+          <option value="sugarcane">Sugarcane</option>
+          <option value="cotton">Cotton</option>
+          <option value="pulses">Pulses</option>
+          <option value="soybean">Soybean</option>
+          <option value="groundnut">Groundnut</option>
+          <option value="mustard">Mustard</option>
+          <option value="sunflower">Sunflower</option>
+          <option value="millets">Millets (Jowar/Bajra/Ragi)</option>
+          <option value="barley">Barley</option>
+          <option value="vegetables">Vegetables</option>
+          <option value="fruits">Fruits / Horticulture</option>
+          <option value="spices">Spices</option>
+          <option value="tea">Tea</option>
+          <option value="coffee">Coffee</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-wrap">
+      <button class="btn" id="submitBtn">Submit</button>
+    </div>
+
+    <!-- Results -->
+    <div class="card results" id="results" style="display:none;">
+      <h3>Eligible Schemes</h3>
+      <div id="schemesList"></div>
+    </div>
+  </div>
+
+  <script>
+    // Official links
+    const LINKS = {
+      PMKISAN: "https://pmkisan.gov.in/RegistrationFormupdated.aspx",
+      PMFBY: "https://pmfby.gov.in/selfRegistration",
+      KCC_SBI: "https://sbi.co.in/web/agri-rural/agriculture-banking/crop-loan/kisan-credit-card",
+      KCC_INFO: "https://www.myscheme.gov.in/schemes/kcc",
+      PMKMY: "https://pmkmy.gov.in/",
+      SOIL: "https://soilhealth.dac.gov.in/",
+      MIDH: "https://midh.gov.in/",
+      PMKSY: "https://pmksy.gov.in/"
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    $("submitBtn").addEventListener("click", () => {
+      const land = parseFloat($("land").value || "0");
+      const income = parseFloat($("income").value || "0");
+      const crop = $("crop").value;
+
+      const list = $("schemesList");
+      list.innerHTML = "";
+
+      // Simple, safe rules (non-exhaustive)
+      if (land > 0) addScheme(
+        "PM-KISAN (Income Support)",
+        "Direct income support to eligible landholding farmer families.",
+        LINKS.PMKISAN
+      );
+
+      if (crop) addScheme(
+        "PMFBY (Crop Insurance)",
+        "Insurance for notified crops against natural calamities, pests & diseases.",
+        LINKS.PMFBY
+      );
+
+      // KCC — fixed official links (no third-party)
+      if (land >= 0) addScheme(
+        "Kisan Credit Card (KCC)",
+        "Credit facility for crop & allied activities via banks.",
+        LINKS.KCC_SBI,
+        LINKS.KCC_INFO,
+        "Apply via SBI",
+        "Overview (myScheme)"
+      );
+
+      if (land > 0 && income <= 250000) addScheme(
+        "PM-KMY (Pension for Small & Marginal Farmers)",
+        "Voluntary & contributory pension scheme for farmers aged 18–40.",
+        LINKS.PMKMY
+      );
+
+      if (crop === "vegetables" || crop === "fruits" || crop === "spices" || crop === "tea" || crop === "coffee") {
+        addScheme(
+          "MIDH / Horticulture Support",
+          "Assistance for horticulture development via state horticulture depts.",
+          LINKS.MIDH
+        );
+      }
+
+      if (["sugarcane","cotton","pulses","soybean","groundnut","mustard","sunflower","millets","wheat","rice","maize","barley"].includes(crop)) {
+        addScheme(
+          "PMKSY (Irrigation & Water Use Efficiency)",
+          "Support for micro-irrigation & on-farm water management (state portals).",
+          LINKS.PMKSY
+        );
+      }
+
+      $("results").style.display = list.children.length ? "block" : "none";
+      if (!list.children.length) {
+        list.innerHTML = `<p>No schemes matched your inputs. Try adjusting details or check state portals.</p>`;
+        $("results").style.display = "block";
+      }
+    });
+
+    function addScheme(title, desc, linkPrimary, linkSecondary=null, labelPrimary="Apply", labelSecondary="More") {
+      const wrap = document.createElement("div");
+      wrap.className = "scheme";
+
+      const text = document.createElement("div");
+      text.innerHTML = `<h4>${title}</h4><small>${desc}</small>`;
+
+      const actions = document.createElement("div");
+      actions.className = "actions";
+      const a1 = document.createElement("a");
+      a1.className = "link";
+      a1.href = linkPrimary; a1.target = "_blank"; a1.rel = "noopener noreferrer";
+      a1.textContent = labelPrimary;
+      actions.appendChild(a1);
+
+      if (linkSecondary) {
+        const a2 = document.createElement("a");
+        a2.className = "link secondary";
+        a2.href = linkSecondary; a2.target = "_blank"; a2.rel = "noopener noreferrer";
+        a2.textContent = labelSecondary;
+        actions.appendChild(a2);
+      }
+
+      wrap.appendChild(text);
+      wrap.appendChild(actions);
+      $("schemesList").appendChild(wrap);
+    }
+  </script>
+</body>
+</html>
